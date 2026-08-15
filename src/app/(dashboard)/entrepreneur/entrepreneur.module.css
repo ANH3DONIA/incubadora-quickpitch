@@ -1,0 +1,227 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.welcomeTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: hsl(var(--color-text));
+}
+
+.date {
+  color: hsl(var(--color-text-secondary));
+  font-size: 0.875rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.statCard {
+  background-color: hsl(var(--color-surface));
+  border: 1px solid hsl(var(--color-border));
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.statHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: hsl(var(--color-text-secondary));
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.statIcon {
+  color: hsl(var(--color-text-muted));
+}
+
+.statValue {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: hsl(var(--color-text));
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: hsl(var(--color-text));
+}
+
+.startupGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.startupCard {
+  background-color: hsl(var(--color-surface));
+  border: 1px solid hsl(var(--color-border));
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.startupCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-color: hsl(var(--color-accent) / 0.5);
+}
+
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.startupName {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: hsl(var(--color-text));
+  margin-bottom: 4px;
+}
+
+.startupSector {
+  font-size: 0.875rem;
+  color: hsl(var(--color-text-secondary));
+}
+
+.cardMetrics {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.metricLabel {
+  font-size: 0.75rem;
+  color: hsl(var(--color-text-muted));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.metricValue {
+  font-size: 1rem;
+  font-weight: 500;
+  color: hsl(var(--color-text));
+}
+
+.cardActions {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid hsl(var(--color-border));
+}
+
+.detailsBtn {
+  width: 100%;
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid hsl(var(--color-border));
+  border-radius: 6px;
+  color: hsl(var(--color-text));
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.detailsBtn:hover {
+  background-color: hsl(var(--color-bg-alt));
+}
+
+.emptyState {
+  background-color: hsl(var(--color-surface));
+  border: 1px dashed hsl(var(--color-border));
+  border-radius: 12px;
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.emptyIcon {
+  color: hsl(var(--color-text-muted));
+  margin-bottom: 8px;
+}
+
+.emptyMessage {
+  color: hsl(var(--color-text-secondary));
+  font-size: 0.875rem;
+}
+
+.primaryBtn {
+  padding: 8px 16px;
+  background-color: hsl(var(--color-navy));
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.primaryBtn:hover {
+  background-color: hsl(var(--color-navy) / 0.9);
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badgeSuccess {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: rgb(21, 128, 61);
+}
+
+.badgeAmber {
+  background-color: hsl(var(--color-amber) / 0.1);
+  color: hsl(var(--color-accent));
+}

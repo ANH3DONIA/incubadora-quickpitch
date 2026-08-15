@@ -1,0 +1,148 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.brandingPanel {
+  display: none;
+  flex: 1;
+  background-color: hsl(var(--color-navy));
+  color: white;
+  padding: 4rem;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .brandingPanel {
+    display: flex;
+  }
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  z-index: 10;
+}
+
+.logoIcon {
+  width: 2rem;
+  height: 2rem;
+  color: hsl(var(--color-amber));
+}
+
+.quoteContainer {
+  max-width: 32rem;
+  z-index: 10;
+}
+
+.quote {
+  font-size: 1.875rem;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
+}
+
+.author {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.decorativeElement {
+  position: absolute;
+  top: 50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, hsl(var(--color-amber)) 0%, transparent 70%);
+  opacity: 0.1;
+  transform: translateY(-50%);
+  border-radius: 50%;
+}
+
+.formPanel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: hsl(var(--color-surface));
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 400px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: hsl(var(--color-text));
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: hsl(var(--color-text-secondary));
+  font-size: 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.error {
+  background-color: hsla(var(--color-error), 0.1);
+  color: hsl(var(--color-error));
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.submitButton {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: hsl(var(--color-text-secondary));
+}
+
+.link {
+  color: hsl(var(--color-navy));
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.link:hover {
+  color: hsl(var(--color-amber));
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

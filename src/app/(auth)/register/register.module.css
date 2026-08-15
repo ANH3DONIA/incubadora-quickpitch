@@ -1,0 +1,194 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.brandingPanel {
+  display: none;
+  flex: 1;
+  background-color: hsl(var(--color-navy));
+  color: white;
+  padding: 4rem;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .brandingPanel {
+    display: flex;
+  }
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  z-index: 10;
+}
+
+.logoIcon {
+  width: 2rem;
+  height: 2rem;
+  color: hsl(var(--color-amber));
+}
+
+.quoteContainer {
+  max-width: 32rem;
+  z-index: 10;
+}
+
+.quote {
+  font-size: 1.875rem;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
+}
+
+.decorativeElement {
+  position: absolute;
+  bottom: -10%;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, hsl(var(--color-amber)) 0%, transparent 70%);
+  opacity: 0.1;
+  transform: rotate(45deg);
+}
+
+.formPanel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: hsl(var(--color-surface));
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 480px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: hsl(var(--color-text));
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: hsl(var(--color-text-secondary));
+  font-size: 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.error {
+  background-color: hsla(var(--color-error), 0.1);
+  color: hsl(var(--color-error));
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.roleSelector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.roleCard {
+  border: 1px solid hsl(var(--color-border));
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background-color: hsl(var(--color-surface));
+}
+
+.roleCard:hover {
+  border-color: hsl(var(--color-amber));
+}
+
+.roleCardSelected {
+  border-color: hsl(var(--color-amber));
+  background-color: hsla(var(--color-amber), 0.05);
+  box-shadow: 0 0 0 1px hsl(var(--color-amber));
+}
+
+.roleIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: hsl(var(--color-navy));
+}
+
+.roleCardSelected .roleIcon {
+  color: hsl(var(--color-amber));
+}
+
+.roleTitle {
+  font-weight: 600;
+  font-size: 1rem;
+  color: hsl(var(--color-text));
+}
+
+.roleDescription {
+  font-size: 0.75rem;
+  color: hsl(var(--color-text-secondary));
+  line-height: 1.4;
+}
+
+.submitButton {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: hsl(var(--color-text-secondary));
+}
+
+.link {
+  color: hsl(var(--color-navy));
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.link:hover {
+  color: hsl(var(--color-amber));
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

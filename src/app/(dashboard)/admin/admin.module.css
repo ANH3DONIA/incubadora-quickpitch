@@ -1,0 +1,140 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.welcomeTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: hsl(var(--color-text));
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.statCard {
+  background-color: hsl(var(--color-surface));
+  border: 1px solid hsl(var(--color-border));
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.statHeader {
+  color: hsl(var(--color-text-secondary));
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.statValue {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: hsl(var(--color-text));
+}
+
+.statValueSuccess {
+  color: rgb(21, 128, 61);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: hsl(var(--color-text));
+}
+
+.tableContainer {
+  background-color: hsl(var(--color-surface));
+  border: 1px solid hsl(var(--color-border));
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.th {
+  padding: 16px 24px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: hsl(var(--color-text-secondary));
+  border-bottom: 1px solid hsl(var(--color-border));
+  background-color: hsl(var(--color-bg-alt));
+}
+
+.td {
+  padding: 16px 24px;
+  font-size: 0.875rem;
+  color: hsl(var(--color-text));
+  border-bottom: 1px solid hsl(var(--color-border));
+}
+
+.tr:last-child .td {
+  border-bottom: none;
+}
+
+.hashCell {
+  font-family: monospace;
+  color: hsl(var(--color-text-muted));
+  background-color: hsl(var(--color-bg-alt));
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badgeSuccess {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: rgb(21, 128, 61);
+}
+
+.badgeNavy {
+  background-color: hsl(var(--color-navy) / 0.1);
+  color: hsl(var(--color-navy));
+}
+
+.badgeAmber {
+  background-color: hsl(var(--color-amber) / 0.1);
+  color: hsl(var(--color-accent));
+}
+
+@media (max-width: 1024px) {
+  .table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
