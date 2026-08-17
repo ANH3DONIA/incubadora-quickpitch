@@ -2,12 +2,11 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import styles from './login.module.css';
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,43 +20,38 @@ function LoginForm() {
     }
   }, [searchParams]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent, customEmail?: string, customPassword?: string) => {
+    if (e) e.preventDefault();
     setError('');
     setIsLoading(true);
 
+    const loginEmail = (customEmail || email).trim().toLowerCase();
+    const loginPassword = customPassword || password;
+
     try {
-      const cleanEmail = email.trim().toLowerCase();
       const result = await signIn('credentials', {
         redirect: false,
-        email: cleanEmail,
-        password,
+        email: loginEmail,
+        password: loginPassword,
       });
 
       if (result?.error) {
-        setError('Credenciales inválidas. Por favor, verifica tu correo y contraseña.');
+        setError('Credenciales inválidas. Por favor verifica tu correo y contraseña.');
+        setIsLoading(false);
       } else {
-        try {
-          const sessionRes = await fetch('/api/auth/session');
-          const sessionData = await sessionRes.json();
-          const role = sessionData?.user?.role;
-
-          if (role === 'INVESTOR') {
-            router.push('/investor');
-          } else if (role === 'ADMIN') {
-            router.push('/admin');
-          } else {
-            router.push('/entrepreneur');
-          }
-        } catch {
-          router.push('/entrepreneur');
-        }
+        // Redirección completa para asegurar que la sesión se hidrate limpiamente
+        window.location.href = '/dashboard';
       }
     } catch (err) {
       setError('Ocurrió un error inesperado al iniciar sesión.');
-    } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleQuickLogin = (quickEmail: string, quickPass: string) => {
+    setEmail(quickEmail);
+    setPassword(quickPass);
+    handleSubmit(undefined, quickEmail, quickPass);
   };
 
   return (
@@ -151,6 +145,66 @@ function LoginForm() {
               {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
             </button>
           </form>
+
+          {/* Accesos Rápidos de Prueba para Demostración */}
+          <div style={{ marginTop: '1.75rem', borderTop: '1px solid hsl(var(--color-border))', paddingTop: '1.25rem' }}>
+            <p style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'hsl(var(--color-text-secondary))', marginBottom: '0.75rem', textAlign: 'center' }}>
+              ⚡ Cuentas de demostración (1 clic):
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('emprendedor@quickpitch.com', 'emp123')}
+                disabled={isLoading}
+                style={{
+                  padding: '0.5rem 0.25rem',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid hsl(var(--color-border))',
+                  backgroundColor: 'hsl(var(--color-bg-alt))',
+                  cursor: 'pointer',
+                  color: 'hsl(var(--color-text))',
+                }}
+              >
+                🚀 Emprendedor
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('inversionista@quickpitch.com', 'inv123')}
+                disabled={isLoading}
+                style={{
+                  padding: '0.5rem 0.25rem',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid hsl(var(--color-border))',
+                  backgroundColor: 'hsl(var(--color-bg-alt))',
+                  cursor: 'pointer',
+                  color: 'hsl(var(--color-text))',
+                }}
+              >
+                💼 Inversionista
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('admin@quickpitch.com', 'admin123')}
+                disabled={isLoading}
+                style={{
+                  padding: '0.5rem 0.25rem',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid hsl(var(--color-border))',
+                  backgroundColor: 'hsl(var(--color-bg-alt))',
+                  cursor: 'pointer',
+                  color: 'hsl(var(--color-text))',
+                }}
+              >
+                🛡️ Admin
+              </button>
+            </div>
+          </div>
 
           <div className={styles.footer}>
             ¿No tienes cuenta?{' '}

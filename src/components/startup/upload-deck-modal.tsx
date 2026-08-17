@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import styles from '@/components/ui/modal.module.css';
 
 interface UploadDeckModalProps {
   startupId: string;
@@ -21,7 +22,7 @@ export function UploadDeckModal({ startupId, onClose }: UploadDeckModalProps) {
     }
     
     if (file.type !== 'application/pdf') {
-      setError('El archivo debe ser un PDF.');
+      setError('El archivo debe ser un formato PDF válido.');
       return;
     }
     
@@ -31,7 +32,7 @@ export function UploadDeckModal({ startupId, onClose }: UploadDeckModalProps) {
     }
 
     setError('');
-    setStatus('Cifrando con AES-256-GCM y guardando...');
+    setStatus('🔒 Cifrando documento con AES-256-GCM y guardando...');
     setLoading(true);
 
     try {
@@ -45,39 +46,59 @@ export function UploadDeckModal({ startupId, onClose }: UploadDeckModalProps) {
       });
 
       if (!res.ok) {
-        throw new Error('Error al subir el deck');
+        const data = await res.json();
+        throw new Error(data.error || 'Error al subir el deck');
       }
 
-      setStatus('¡Pitch Deck cifrado y protegido exitosamente!');
+      setStatus('✅ ¡Pitch Deck cifrado y almacenado con éxito!');
       setTimeout(() => {
         onClose();
-      }, 2000);
+      }, 1500);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || 'Error al procesar el archivo');
       setStatus('');
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
-      <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '8px', width: '100%', maxWidth: '400px', color: 'black' }}>
-        <h2 style={{ marginTop: 0 }}>Subir Pitch Deck</h2>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        {status && <p style={{ color: 'green' }}>{status}</p>}
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+    <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className={styles.modal} style={{ maxWidth: '460px' }}>
+        <div className={styles.header}>
           <div>
+            <h2 className={styles.title}>Subir Pitch Deck</h2>
+            <p className={styles.subtitle}>Presentación cifrada para inversionistas</p>
+          </div>
+          <button type="button" onClick={onClose} className={styles.closeBtn} aria-label="Cerrar">
+            ✕
+          </button>
+        </div>
+
+        {error && <div className={styles.error}>{error}</div>}
+        {status && <div className={styles.success}>{status}</div>}
+
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.field}>
+            <label>Archivo PDF (Máximo 15MB)</label>
             <input 
               type="file" 
               accept="application/pdf"
+              className={styles.input}
               onChange={e => setFile(e.target.files?.[0] || null)}
+              disabled={loading}
+              required
             />
-            <p style={{ fontSize: '0.8rem', color: 'gray' }}>PDF máximo 15MB</p>
+            <p style={{ fontSize: '0.75rem', color: 'hsl(var(--color-text-secondary))', marginTop: '4px' }}>
+              🛡️ El archivo se cifrará de punto a punto antes de ser almacenado.
+            </p>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
-            <button type="button" onClick={onClose} disabled={loading} style={{ padding: '0.5rem 1rem' }}>Cancelar</button>
-            <button type="submit" disabled={loading} style={{ padding: '0.5rem 1rem', backgroundColor: 'black', color: 'white' }}>
-              Subir
+
+          <div className={styles.actions}>
+            <button type="button" onClick={onClose} disabled={loading} className="btn btn-outline">
+              Cancelar
+            </button>
+            <button type="submit" disabled={loading || !file} className="btn btn-primary">
+              {loading ? 'Cifrando y Subiendo...' : 'Subir Deck'}
             </button>
           </div>
         </form>

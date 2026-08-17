@@ -9,18 +9,18 @@ export function InvestorClient() {
 
   return (
     <>
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
         <button 
           onClick={() => setIsBuyModalOpen(true)}
-          style={{ padding: '0.75rem 1.5rem', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#10b981', color: 'white', border: 'none', fontWeight: 'bold' }}
+          className="btn btn-accent"
         >
-          Comprar Pase de Inversionista
+          🎟️ Comprar Pase de Inversionista
         </button>
         <Link 
           href="#startups"
-          style={{ padding: '0.75rem 1.5rem', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#3b82f6', color: 'white', border: 'none', fontWeight: 'bold', textDecoration: 'none', display: 'flex', alignItems: 'center' }}
+          className="btn btn-outline"
         >
-          Explorar Startups
+          🔍 Explorar Startups Disponibles
         </Link>
       </div>
 

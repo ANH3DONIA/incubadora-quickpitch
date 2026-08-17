@@ -30,14 +30,24 @@ export function EntrepreneurClient({
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.welcomeTitle}>Bienvenido, Emprendedor</h1>
-        <p className={styles.date}>{formattedDate}</p>
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-          <button onClick={() => setCreateModalOpen(true)} style={{ padding: '0.5rem 1rem', background: 'black', color: 'white', borderRadius: '4px' }}>
-            Crear Startup
+        <div>
+          <h1 className={styles.welcomeTitle}>Panel de Emprendedor</h1>
+          <p className={styles.date}>{formattedDate}</p>
+        </div>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <button 
+            onClick={() => setCreateModalOpen(true)} 
+            className="btn btn-primary"
+          >
+            🚀 Crear Startup
           </button>
-          <button style={{ padding: '0.5rem 1rem', background: '#333', color: 'white', borderRadius: '4px' }} onClick={() => setPitchModalOpen(true)}>
-            Agendar Pitch
+          <button 
+            className="btn btn-accent" 
+            onClick={() => setPitchModalOpen(true)}
+            disabled={startups.length === 0}
+            title={startups.length === 0 ? 'Primero registra una startup' : 'Agendar sesión de pitch'}
+          >
+            📅 Agendar Pitch
           </button>
         </div>
       </header>
@@ -63,7 +73,7 @@ export function EntrepreneurClient({
             <MoneyIcon className={styles.statIcon} />
           </div>
           <div className={styles.statValue}>
-            ${totalInvestment.toLocaleString('en-US')}
+            ${totalInvestment.toLocaleString('en-US')} USD
           </div>
         </div>
         <div className={styles.statCard}>
@@ -84,7 +94,7 @@ export function EntrepreneurClient({
         </div>
       </section>
 
-      <section className={styles.section}>
+      <section className={styles.section} id="startups">
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>Mis Startups</h2>
         </div>
@@ -93,6 +103,13 @@ export function EntrepreneurClient({
           <div className={styles.emptyState}>
             <RocketIcon className={styles.emptyIcon} size={48} />
             <p className={styles.emptyMessage}>No tienes startups registradas en la incubadora</p>
+            <button 
+              onClick={() => setCreateModalOpen(true)} 
+              className="btn btn-primary"
+              style={{ marginTop: '1rem' }}
+            >
+              Registrar mi primera startup
+            </button>
           </div>
         ) : (
           <div className={styles.startupGrid}>
@@ -111,7 +128,7 @@ export function EntrepreneurClient({
                     {startup.isApproved ? 'Aprobada' : 'En Revisión'}
                   </span>
                 </div>
-                <p style={{ fontSize: '0.875rem', color: 'hsl(var(--color-text-secondary))', margin: '0.75rem 0' }}>
+                <p style={{ fontSize: '0.875rem', color: 'hsl(var(--color-text-secondary))', margin: '0.75rem 0', minHeight: '40px' }}>
                   {startup.description}
                 </p>
                 <div className={styles.cardMetrics}>
@@ -120,9 +137,18 @@ export function EntrepreneurClient({
                     ${Number(startup.valuationTarget).toLocaleString('en-US')} USD
                   </span>
                 </div>
-                <div style={{ marginTop: '1rem' }}>
-                  <button onClick={() => setUploadDeckModalData({ isOpen: true, startupId: startup.id })} style={{ padding: '0.25rem 0.5rem', background: '#eee', color: 'black', borderRadius: '4px', fontSize: '0.875rem' }}>
-                    Subir Pitch Deck
+                <div style={{ marginTop: '1.25rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <button 
+                    onClick={() => setUploadDeckModalData({ isOpen: true, startupId: startup.id })} 
+                    className="btn btn-outline btn-sm"
+                  >
+                    📄 {startup.pitchDecks?.length > 0 ? 'Actualizar Deck' : 'Subir Pitch Deck'}
+                  </button>
+                  <button 
+                    onClick={() => setPitchModalOpen(true)}
+                    className="btn btn-primary btn-sm"
+                  >
+                    ⏱️ Programar Pitch
                   </button>
                 </div>
               </div>
@@ -131,9 +157,9 @@ export function EntrepreneurClient({
         )}
       </section>
 
-      <section className={styles.section}>
+      <section className={styles.section} id="sesiones">
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Próximas Sesiones</h2>
+          <h2 className={styles.sectionTitle}>Próximas Sesiones de Pitch</h2>
         </div>
         {pitchSessions.length === 0 ? (
           <div className={styles.emptyState}>
@@ -145,10 +171,22 @@ export function EntrepreneurClient({
             {pitchSessions.map((session) => (
               <div key={session.id} className={styles.startupCard}>
                 <h3 className={styles.startupName}>{session.startup.name}</h3>
-                <p style={{ fontSize: '0.875rem', color: 'hsl(var(--color-text-muted))' }}>
-                  {new Date(session.scheduledStart).toLocaleString('es-ES')}
+                <p style={{ fontSize: '0.875rem', color: 'hsl(var(--color-text-muted))', margin: '0.5rem 0' }}>
+                  🕒 {new Date(session.scheduledStart).toLocaleString('es-ES', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short'
+                  })}
                 </p>
-                <span className={styles.badge}>{session.status}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
+                  <span className={styles.badge}>{session.status}</span>
+                  <a 
+                    href={`/pitch-room/${session.id}`} 
+                    className="btn btn-accent btn-sm"
+                    style={{ textDecoration: 'none' }}
+                  >
+                    🎥 Entrar a Sala
+                  </a>
+                </div>
               </div>
             ))}
           </div>

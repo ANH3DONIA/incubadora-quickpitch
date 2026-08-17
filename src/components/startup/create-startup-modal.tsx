@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { startupSchema } from '@/lib/validations';
+import styles from '@/components/ui/modal.module.css';
 
 interface CreateStartupModalProps {
   onClose: () => void;
@@ -12,8 +13,8 @@ export function CreateStartupModal({ onClose }: CreateStartupModalProps) {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
-    sector: '',
-    valuationTarget: 1000,
+    sector: 'CleanTech',
+    valuationTarget: 500000,
     description: '',
   });
   const [error, setError] = useState('');
@@ -50,59 +51,85 @@ export function CreateStartupModal({ onClose }: CreateStartupModalProps) {
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
-      <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '8px', width: '100%', maxWidth: '500px', color: 'black' }}>
-        <h2 style={{ marginTop: 0 }}>Crear Startup</h2>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className={styles.modal}>
+        <div className={styles.header}>
           <div>
-            <label>Nombre de Startup</label>
+            <h2 className={styles.title}>Registrar Nueva Startup</h2>
+            <p className={styles.subtitle}>Ingresa los datos para postular a la incubadora</p>
+          </div>
+          <button type="button" onClick={onClose} className={styles.closeBtn} aria-label="Cerrar">
+            ✕
+          </button>
+        </div>
+
+        {error && <div className={styles.error}>{error}</div>}
+
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.field}>
+            <label>Nombre de la Startup</label>
             <input 
               type="text" 
+              className={styles.input}
+              placeholder="Ej. EcoTech Solutions"
               value={formData.name} 
               onChange={e => setFormData({ ...formData, name: e.target.value })}
-              style={{ width: '100%', padding: '0.5rem', marginTop: '0.25rem' }} 
+              required
+              disabled={loading}
             />
           </div>
-          <div>
-            <label>Sector</label>
+
+          <div className={styles.field}>
+            <label>Sector de la Industria</label>
             <select 
+              className={styles.select}
               value={formData.sector} 
               onChange={e => setFormData({ ...formData, sector: e.target.value })}
-              style={{ width: '100%', padding: '0.5rem', marginTop: '0.25rem' }}
+              required
+              disabled={loading}
             >
-              <option value="">Selecciona un sector</option>
-              <option value="CleanTech">CleanTech</option>
-              <option value="HealthTech">HealthTech</option>
-              <option value="FinTech">FinTech</option>
-              <option value="EdTech">EdTech</option>
-              <option value="Logística">Logística</option>
-              <option value="IA">IA</option>
+              <option value="CleanTech">CleanTech (Sostenibilidad)</option>
+              <option value="HealthTech">HealthTech (Salud y Medicina)</option>
+              <option value="FinTech">FinTech (Finanzas y Pagos)</option>
+              <option value="EdTech">EdTech (Educación)</option>
+              <option value="Logística">Logística & Supply Chain</option>
+              <option value="IA">Inteligencia Artificial</option>
             </select>
           </div>
-          <div>
+
+          <div className={styles.field}>
             <label>Valoración Objetivo (USD)</label>
             <input 
               type="number" 
+              className={styles.input}
               min="1000" 
               max="100000000"
+              step="10000"
               value={formData.valuationTarget} 
               onChange={e => setFormData({ ...formData, valuationTarget: Number(e.target.value) })}
-              style={{ width: '100%', padding: '0.5rem', marginTop: '0.25rem' }} 
+              required
+              disabled={loading}
             />
           </div>
-          <div>
-            <label>Descripción</label>
+
+          <div className={styles.field}>
+            <label>Descripción y Propuesta de Valor (mínimo 20 caracteres)</label>
             <textarea 
+              className={styles.textarea}
+              placeholder="Describe qué problema resuelve tu proyecto y cuál es tu ventaja competitiva..."
               value={formData.description} 
               onChange={e => setFormData({ ...formData, description: e.target.value })}
-              style={{ width: '100%', padding: '0.5rem', marginTop: '0.25rem', minHeight: '100px' }} 
+              required
+              disabled={loading}
             />
           </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
-            <button type="button" onClick={onClose} disabled={loading} style={{ padding: '0.5rem 1rem' }}>Cancelar</button>
-            <button type="submit" disabled={loading} style={{ padding: '0.5rem 1rem', backgroundColor: 'black', color: 'white' }}>
-              {loading ? 'Guardando...' : 'Crear'}
+
+          <div className={styles.actions}>
+            <button type="button" onClick={onClose} disabled={loading} className="btn btn-outline">
+              Cancelar
+            </button>
+            <button type="submit" disabled={loading} className="btn btn-primary">
+              {loading ? 'Guardando...' : 'Crear Startup'}
             </button>
           </div>
         </form>
