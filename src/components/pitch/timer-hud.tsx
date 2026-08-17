@@ -40,10 +40,10 @@ export function TimerHud({ remainingSeconds, totalSeconds, status }: TimerHudPro
             : status === 'EXPIRED' ? 'hsl(var(--color-error))' : 'hsl(var(--color-amber))',
           animation: status === 'IN_PROGRESS' ? 'pulse-subtle 1.5s infinite' : 'none',
         }} />
-        <span style={{ fontSize: '0.875rem', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-          {status === 'WAITING' && 'Sala de Espera'}
-          {status === 'IN_PROGRESS' && (isUrgent ? '⚠️ ¡Últimos Segundos!' : 'Pitch en Vivo')}
-          {status === 'EXPIRED' && '⏰ Tiempo Finalizado'}
+        <span style={{ fontSize: '0.875rem', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+          {status === 'WAITING' && 'Sala de Espera — Sesión Programada'}
+          {status === 'IN_PROGRESS' && (isUrgent ? 'Últimos 30 Segundos' : 'Pitch en Transmisión')}
+          {status === 'EXPIRED' && 'Tiempo de Pitch Concluido'}
           {status === 'COMPLETED' && 'Sesión Concluida'}
         </span>
       </div>

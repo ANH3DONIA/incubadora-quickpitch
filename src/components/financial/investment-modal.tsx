@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { CreditCardIcon, CheckCircleIcon, DollarSignIcon } from '@/components/ui/icons';
 
 interface InvestmentModalProps {
   startupId: string;
@@ -82,9 +83,11 @@ export function InvestmentModal({
         {completedTx ? (
           /* Vista de Confirmación con Auditoría */
           <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ fontSize: '3rem' }}>🎉</div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <CheckCircleIcon size={48} color="hsl(var(--color-success))" />
+            </div>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'hsl(var(--color-navy))' }}>
-              ¡Micro-Inversión Confirmada!
+              Micro-Inversión Confirmada
             </h2>
             <p style={{ color: 'hsl(var(--color-text-secondary))', fontSize: '0.9375rem' }}>
               Tu aporte de <strong>${completedTx.amount.toLocaleString()} {completedTx.currency}</strong> a <strong>{startupName}</strong> ha sido procesado mediante <strong>{completedTx.gateway}</strong>.
@@ -98,7 +101,7 @@ export function InvestmentModal({
               fontSize: '0.8rem',
               border: '1px solid hsl(var(--color-border))',
             }}>
-              <p style={{ color: 'hsl(var(--color-text-muted))', marginBottom: '4px' }}>HASH DE AUDITORÍA (INMUTABLE):</p>
+              <p style={{ color: 'hsl(var(--color-text-muted))', marginBottom: '4px', fontWeight: 600 }}>HASH DE AUDITORÍA (INMUTABLE):</p>
               <code style={{ wordBreak: 'break-all', color: 'hsl(var(--color-navy))', fontWeight: 600 }}>
                 {completedTx.auditHash || 'Generado'}
               </code>
@@ -154,7 +157,10 @@ export function InvestmentModal({
                     transition: 'all var(--transition-fast)',
                   }}
                 >
-                  <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'hsl(var(--color-navy))' }}>💳 Stripe Checkout</div>
+                  <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'hsl(var(--color-navy))', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <CreditCardIcon size={18} />
+                    Stripe Checkout
+                  </div>
                   <div style={{ fontSize: '0.75rem', color: 'hsl(var(--color-text-muted))', marginTop: '2px' }}>Tarjeta de Crédito (USD)</div>
                 </div>
 
@@ -169,7 +175,10 @@ export function InvestmentModal({
                     transition: 'all var(--transition-fast)',
                   }}
                 >
-                  <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'hsl(var(--color-navy))' }}>🟡 Binance Pay</div>
+                  <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'hsl(var(--color-navy))', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <DollarSignIcon size={18} color="hsl(var(--color-amber))" />
+                    Binance Pay
+                  </div>
                   <div style={{ fontSize: '0.75rem', color: 'hsl(var(--color-text-muted))', marginTop: '2px' }}>Criptoactivos (USDT)</div>
                 </div>
               </div>

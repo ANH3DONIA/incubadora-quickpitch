@@ -7,6 +7,14 @@ import { TimerHud } from '@/components/pitch/timer-hud';
 import { WaitingRoom } from '@/components/pitch/waiting-room';
 import { VideoPlayer } from '@/components/pitch/video-player';
 import { InvestmentModal } from '@/components/financial/investment-modal';
+import { 
+  RocketIcon, 
+  BriefcaseIcon, 
+  DollarSignIcon, 
+  CheckCircleIcon,
+  VideoIcon,
+  ShieldIcon 
+} from '@/components/ui/icons';
 
 interface PitchRoomClientProps {
   sessionId: string;
@@ -136,10 +144,10 @@ export default function PitchRoomClient({ sessionId, startup }: PitchRoomClientP
           gap: '1rem',
           animation: 'slideInRight 0.5s ease-out',
         }}>
-          <span style={{ fontSize: '2rem' }}>🎉</span>
+          <CheckCircleIcon size={28} color="hsl(var(--color-amber))" />
           <div>
             <h4 style={{ color: 'hsl(var(--color-amber))', fontSize: '1rem', fontWeight: 800 }}>
-              ¡Nueva Micro-Inversión Recibida!
+              Micro-Inversión Recibida
             </h4>
             <p style={{ fontSize: '0.875rem', opacity: 0.9 }}>
               {investmentAlert.investorName} aportó <strong>${investmentAlert.amount.toLocaleString()} {investmentAlert.currency}</strong> vía {investmentAlert.gateway}.
@@ -184,14 +192,16 @@ export default function PitchRoomClient({ sessionId, startup }: PitchRoomClientP
             onClick={() => { setRole('ENTREPRENEUR'); setUserName('Carlos Emprendedor'); }}
             className={`btn btn-sm ${role === 'ENTREPRENEUR' ? 'btn-primary' : 'btn-outline'}`}
           >
-            🚀 Emprendedor
+            <RocketIcon size={16} />
+            Emprendedor
           </button>
           <button
             type="button"
             onClick={() => { setRole('INVESTOR'); setUserName('Sofía Inversionista'); }}
             className={`btn btn-sm ${role === 'INVESTOR' ? 'btn-primary' : 'btn-outline'}`}
           >
-            💼 Inversionista
+            <BriefcaseIcon size={16} />
+            Inversionista
           </button>
         </div>
       </header>
@@ -252,11 +262,11 @@ export default function PitchRoomClient({ sessionId, startup }: PitchRoomClientP
               }}>
                 <div>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'hsl(var(--color-navy))' }}>
-                    ⏰ Tiempo de Presentación Concluido
+                    Tiempo de Presentación Concluido
                   </h3>
                   <p style={{ color: 'hsl(var(--color-text-secondary))', fontSize: '0.875rem', marginTop: '2px' }}>
                     {role === 'ENTREPRENEUR'
-                      ? 'Tu micrófono ha sido silenciado automáticamente. Esperando decisión del inversionista...'
+                      ? 'El micrófono ha sido silenciado automáticamente. Esperando decisión del inversionista...'
                       : 'Puedes formalizar una micro-inversión en este momento.'}
                   </p>
                 </div>
@@ -267,7 +277,8 @@ export default function PitchRoomClient({ sessionId, startup }: PitchRoomClientP
                     onClick={() => setShowInvestmentModal(true)}
                     className="btn btn-accent btn-lg"
                   >
-                    💰 Invertir en {startup.name}
+                    <DollarSignIcon size={20} />
+                    Invertir en {startup.name}
                   </button>
                 )}
               </div>

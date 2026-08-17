@@ -5,6 +5,13 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import styles from './login.module.css';
+import { 
+  RocketIcon, 
+  BriefcaseIcon, 
+  ShieldIcon, 
+  LightningIcon,
+  CheckCircleIcon
+} from '@/components/ui/icons';
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -16,7 +23,7 @@ function LoginForm() {
 
   useEffect(() => {
     if (searchParams.get('registered') === 'true') {
-      setSuccessMsg('🎉 ¡Cuenta creada con éxito! Ingresa tus credenciales para continuar.');
+      setSuccessMsg('Cuenta creada con éxito. Ingresa tus credenciales para continuar.');
     }
   }, [searchParams]);
 
@@ -36,10 +43,10 @@ function LoginForm() {
       });
 
       if (result?.error) {
-        setError('Credenciales inválidas. Por favor verifica tu correo y contraseña.');
+        setError('Credenciales inválidas. Verifica tu correo y contraseña.');
         setIsLoading(false);
       } else {
-        // Redirección completa para asegurar que la sesión se hidrate limpiamente
+        // Redirección completa para hidratación inmediata de sesión en servidor
         window.location.href = '/dashboard';
       }
     } catch (err) {
@@ -58,17 +65,7 @@ function LoginForm() {
     <div className={styles.container}>
       <div className={styles.brandingPanel}>
         <div className={styles.logoContainer}>
-          <svg
-            className={styles.logoIcon}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-          </svg>
+          <LightningIcon size={24} color="hsl(var(--color-amber))" />
           QuickPitch
         </div>
 
@@ -85,9 +82,9 @@ function LoginForm() {
       <div className={styles.formPanel}>
         <div className={styles.formContainer}>
           <div className={styles.header}>
-            <h1 className={styles.title}>Bienvenido de nuevo</h1>
+            <h1 className={styles.title}>Iniciar Sesión</h1>
             <p className={styles.subtitle}>
-              Ingresa a tu cuenta para continuar en QuickPitch
+              Accede a tu panel en la incubadora QuickPitch
             </p>
           </div>
 
@@ -98,10 +95,14 @@ function LoginForm() {
               color: 'hsl(142 71% 30%)',
               borderRadius: 'var(--radius-md)',
               fontSize: '0.875rem',
-              fontWeight: 500,
+              fontWeight: 600,
               marginBottom: '1rem',
               border: '1px solid hsl(var(--color-success) / 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
             }}>
+              <CheckCircleIcon size={18} color="hsl(var(--color-success))" />
               {successMsg}
             </div>
           )}
@@ -142,14 +143,14 @@ function LoginForm() {
               className={`btn btn-primary btn-lg ${styles.submitButton}`}
               disabled={isLoading}
             >
-              {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+              {isLoading ? 'Iniciando sesión...' : 'Ingresar al Dashboard'}
             </button>
           </form>
 
           {/* Accesos Rápidos de Prueba para Demostración */}
           <div style={{ marginTop: '1.75rem', borderTop: '1px solid hsl(var(--color-border))', paddingTop: '1.25rem' }}>
             <p style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'hsl(var(--color-text-secondary))', marginBottom: '0.75rem', textAlign: 'center' }}>
-              ⚡ Cuentas de demostración (1 clic):
+              Cuentas de demostración rápida:
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
               <button
@@ -157,7 +158,7 @@ function LoginForm() {
                 onClick={() => handleQuickLogin('emprendedor@quickpitch.com', 'emp123')}
                 disabled={isLoading}
                 style={{
-                  padding: '0.5rem 0.25rem',
+                  padding: '0.625rem 0.25rem',
                   fontSize: '0.75rem',
                   fontWeight: 600,
                   borderRadius: 'var(--radius-sm)',
@@ -165,16 +166,21 @@ function LoginForm() {
                   backgroundColor: 'hsl(var(--color-bg-alt))',
                   cursor: 'pointer',
                   color: 'hsl(var(--color-text))',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.375rem',
                 }}
               >
-                🚀 Emprendedor
+                <RocketIcon size={14} />
+                Emprendedor
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickLogin('inversionista@quickpitch.com', 'inv123')}
                 disabled={isLoading}
                 style={{
-                  padding: '0.5rem 0.25rem',
+                  padding: '0.625rem 0.25rem',
                   fontSize: '0.75rem',
                   fontWeight: 600,
                   borderRadius: 'var(--radius-sm)',
@@ -182,16 +188,21 @@ function LoginForm() {
                   backgroundColor: 'hsl(var(--color-bg-alt))',
                   cursor: 'pointer',
                   color: 'hsl(var(--color-text))',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.375rem',
                 }}
               >
-                💼 Inversionista
+                <BriefcaseIcon size={14} />
+                Inversionista
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickLogin('admin@quickpitch.com', 'admin123')}
                 disabled={isLoading}
                 style={{
-                  padding: '0.5rem 0.25rem',
+                  padding: '0.625rem 0.25rem',
                   fontSize: '0.75rem',
                   fontWeight: 600,
                   borderRadius: 'var(--radius-sm)',
@@ -199,9 +210,14 @@ function LoginForm() {
                   backgroundColor: 'hsl(var(--color-bg-alt))',
                   cursor: 'pointer',
                   color: 'hsl(var(--color-text))',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.375rem',
                 }}
               >
-                🛡️ Admin
+                <ShieldIcon size={14} />
+                Admin
               </button>
             </div>
           </div>

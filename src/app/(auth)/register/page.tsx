@@ -1,14 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './register.module.css';
+import { RocketIcon, BriefcaseIcon, LightningIcon } from '@/components/ui/icons';
 
 type Role = 'emprendedor' | 'inversionista' | null;
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,6 +18,15 @@ export default function RegisterPage() {
   const [role, setRole] = useState<Role>(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const roleParam = searchParams.get('role');
+    if (roleParam === 'founder' || roleParam === 'entrepreneur') {
+      setRole('emprendedor');
+    } else if (roleParam === 'investor') {
+      setRole('inversionista');
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +43,7 @@ export default function RegisterPage() {
     }
 
     if (!role) {
-      setError('Por favor selecciona un rol.');
+      setError('Por favor selecciona si eres Emprendedor o Inversionista.');
       return;
     }
 
@@ -43,20 +54,25 @@ export default function RegisterPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, role: dbRole }),
+        body: JSON.stringify({ 
+          name: name.trim(), 
+          email: email.trim().toLowerCase(), 
+          password, 
+          role: dbRole 
+        }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
         setError(data.error || 'Ocurrió un error al crear la cuenta.');
+        setIsLoading(false);
         return;
       }
 
       router.push('/login?registered=true');
     } catch (err) {
-      setError('Ocurrió un error inesperado al crear la cuenta.');
-    } finally {
+      setError('Ocurrió un error de red al crear la cuenta.');
       setIsLoading(false);
     }
   };
@@ -65,23 +81,13 @@ export default function RegisterPage() {
     <div className={styles.container}>
       <div className={styles.brandingPanel}>
         <div className={styles.logoContainer}>
-          <svg
-            className={styles.logoIcon}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-          </svg>
+          <LightningIcon size={24} color="hsl(var(--color-amber))" />
           QuickPitch
         </div>
 
         <div className={styles.quoteContainer}>
           <blockquote className={styles.quote}>
-            "Cada gran empresa comenzó como una idea y un paso de fe."
+            "Cada gran empresa comenzó como una idea audaz y una primera conversación."
           </blockquote>
         </div>
 
@@ -93,7 +99,7 @@ export default function RegisterPage() {
           <div className={styles.header}>
             <h1 className={styles.title}>Crear una cuenta</h1>
             <p className={styles.subtitle}>
-              Únete a QuickPitch y comienza tu viaje
+              Únete a la incubadora QuickPitch
             </p>
           </div>
 
@@ -109,7 +115,7 @@ export default function RegisterPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                placeholder="Juan Pérez"
+                placeholder="Carlos Mendoza"
                 disabled={isLoading}
               />
             </div>
@@ -123,13 +129,13 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="tu@correo.com"
+                placeholder="carlos@mitarug.com"
                 disabled={isLoading}
               />
             </div>
 
             <div className="input-group">
-              <label>Rol</label>
+              <label>Perfil en la Plataforma</label>
               <div className={styles.roleSelector}>
                 <div
                   className={`${styles.roleCard} ${
@@ -137,24 +143,10 @@ export default function RegisterPage() {
                   }`}
                   onClick={() => setRole('emprendedor')}
                 >
-                  <svg
-                    className={styles.roleIcon}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2l.5-.5a5.4 5.4 0 0 0 1-1.5c1.6-1.6 2.5-3.5 2.5-5.5v-1l-1-1h-1c-2 0-3.9.9-5.5 2.5a5.4 5.4 0 0 0-1.5 1l-.5.5Z" />
-                    <path d="m12 15 3.5 3.5" />
-                    <path d="M15 12h-3" />
-                    <path d="M12 9V6" />
-                    <path d="M15 15v3" />
-                  </svg>
+                  <RocketIcon size={24} color={role === 'emprendedor' ? 'hsl(var(--color-amber))' : 'currentColor'} />
                   <span className={styles.roleTitle}>Emprendedor</span>
                   <span className={styles.roleDescription}>
-                    Quiero presentar mi startup y buscar inversión
+                    Presentar mi startup y buscar inversión
                   </span>
                 </div>
 
@@ -164,28 +156,17 @@ export default function RegisterPage() {
                   }`}
                   onClick={() => setRole('inversionista')}
                 >
-                  <svg
-                    className={styles.roleIcon}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="12" x2="12" y1="2" y2="22" />
-                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                  </svg>
+                  <BriefcaseIcon size={24} color={role === 'inversionista' ? 'hsl(var(--color-amber))' : 'currentColor'} />
                   <span className={styles.roleTitle}>Inversionista</span>
                   <span className={styles.roleDescription}>
-                    Quiero descubrir startups y realizar inversiones
+                    Descubrir proyectos y realizar inversiones
                   </span>
                 </div>
               </div>
             </div>
 
             <div className="input-group">
-              <label htmlFor="password">Contraseña</label>
+              <label htmlFor="password">Contraseña (mínimo 6 caracteres)</label>
               <input
                 id="password"
                 type="password"
@@ -231,5 +212,13 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Cargando formulario...</div>}>
+      <RegisterForm />
+    </Suspense>
   );
 }

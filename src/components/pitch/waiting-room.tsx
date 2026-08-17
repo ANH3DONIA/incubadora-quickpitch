@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { RocketIcon, VideoIcon, CheckCircleIcon, ClockIcon } from '@/components/ui/icons';
 
 interface WaitingRoomProps {
   startupName: string;
@@ -74,7 +75,7 @@ export function WaitingRoom({
           color: 'hsl(var(--color-navy))',
           lineHeight: 1.5,
         }}>
-          💡 <strong>Reglas del Quick Pitch:</strong> El expositor tendrá 3 minutos ininterrumpidos. Al llegar el contador a cero, se habilitará la opción de micro-inversión para el inversionista.
+          <strong>Reglas del Quick Pitch:</strong> El expositor dispondrá de 3 minutos continuos. Al llegar el contador a cero, el sistema silenciará el micrófono y habilitará la pasarela de decisión y micro-inversión para el inversionista.
         </div>
       </div>
 
@@ -90,21 +91,21 @@ export function WaitingRoom({
       }}>
         <div>
           <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '1rem', color: 'hsl(var(--color-navy))' }}>
-            Lista de Preparación
+            Verificación de Sala y Conexión
           </h3>
 
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}>
-              <span style={{ color: 'hsl(var(--color-success))' }}>✓</span> Cámara y micrófono detectados
+              <CheckCircleIcon size={18} color="hsl(var(--color-success))" />
+              <span>Cámara y micrófono inicializados</span>
             </li>
             <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}>
-              <span style={{ color: 'hsl(var(--color-success))' }}>✓</span> Señalización WebSocket conectada
+              <CheckCircleIcon size={18} color="hsl(var(--color-success))" />
+              <span>Conexión WebSocket establecida</span>
             </li>
             <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}>
-              <span style={{ color: isReady ? 'hsl(var(--color-success))' : 'hsl(var(--color-text-muted))' }}>
-                {isReady ? '✓' : '○'}
-              </span>{' '}
-              Estado del participante: {isReady ? 'Listo' : 'Pendiente'}
+              <CheckCircleIcon size={18} color={isReady ? 'hsl(var(--color-success))' : 'hsl(var(--color-text-muted))'} />
+              <span>Estado del participante: {isReady ? 'Listo' : 'Pendiente de confirmación'}</span>
             </li>
           </ul>
         </div>
@@ -116,7 +117,7 @@ export function WaitingRoom({
             className={`btn ${isReady ? 'btn-primary' : 'btn-outline'} btn-lg`}
             style={{ width: '100%' }}
           >
-            {isReady ? '✓ Estoy Listo para Presentar' : 'Marcar como "Listo"'}
+            {isReady ? 'Confirmado: Estoy Listo' : 'Confirmar que Estoy Listo'}
           </button>
 
           {userRole === 'ENTREPRENEUR' && (
@@ -126,7 +127,8 @@ export function WaitingRoom({
               className="btn btn-accent btn-lg"
               style={{ width: '100%' }}
             >
-              ⏱️ Iniciar Quick Pitch (3:00 min)
+              <ClockIcon size={18} />
+              Iniciar Quick Pitch (3:00 min)
             </button>
           )}
         </div>

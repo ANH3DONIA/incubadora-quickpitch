@@ -5,6 +5,16 @@ import styles from './entrepreneur.module.css';
 import { CreateStartupModal } from '@/components/startup/create-startup-modal';
 import { UploadDeckModal } from '@/components/startup/upload-deck-modal';
 import { SchedulePitchModal } from '@/components/pitch/schedule-pitch-modal';
+import { 
+  RocketIcon, 
+  CalendarIcon, 
+  DollarSignIcon, 
+  VideoIcon, 
+  FileTextIcon, 
+  PlusIcon,
+  EyeIcon,
+  ArrowRightIcon
+} from '@/components/ui/icons';
 
 interface EntrepreneurClientProps {
   formattedDate: string;
@@ -36,18 +46,22 @@ export function EntrepreneurClient({
         </div>
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
           <button 
+            type="button"
             onClick={() => setCreateModalOpen(true)} 
             className="btn btn-primary"
           >
-            🚀 Crear Startup
+            <PlusIcon size={18} />
+            Crear Startup
           </button>
           <button 
+            type="button"
             className="btn btn-accent" 
             onClick={() => setPitchModalOpen(true)}
             disabled={startups.length === 0}
             title={startups.length === 0 ? 'Primero registra una startup' : 'Agendar sesión de pitch'}
           >
-            📅 Agendar Pitch
+            <CalendarIcon size={18} />
+            Agendar Pitch
           </button>
         </div>
       </header>
@@ -56,21 +70,21 @@ export function EntrepreneurClient({
         <div className={styles.statCard}>
           <div className={styles.statHeader}>
             <span>Startups Registradas</span>
-            <RocketIcon className={styles.statIcon} />
+            <RocketIcon className={styles.statIcon} size={20} />
           </div>
           <div className={styles.statValue}>{startups.length}</div>
         </div>
         <div className={styles.statCard}>
           <div className={styles.statHeader}>
             <span>Startups Aprobadas</span>
-            <RocketIcon className={styles.statIcon} />
+            <RocketIcon className={styles.statIcon} size={20} />
           </div>
           <div className={styles.statValue}>{activeStartupsCount}</div>
         </div>
         <div className={styles.statCard}>
           <div className={styles.statHeader}>
             <span>Inversión Recibida</span>
-            <MoneyIcon className={styles.statIcon} />
+            <DollarSignIcon className={styles.statIcon} size={20} />
           </div>
           <div className={styles.statValue}>
             ${totalInvestment.toLocaleString('en-US')} USD
@@ -79,7 +93,7 @@ export function EntrepreneurClient({
         <div className={styles.statCard}>
           <div className={styles.statHeader}>
             <span>Próximo Pitch</span>
-            <CalendarIcon className={styles.statIcon} />
+            <CalendarIcon className={styles.statIcon} size={20} />
           </div>
           <div className={styles.statValue} style={{ fontSize: '1.1rem' }}>
             {nextSession
@@ -104,63 +118,91 @@ export function EntrepreneurClient({
             <RocketIcon className={styles.emptyIcon} size={48} />
             <p className={styles.emptyMessage}>No tienes startups registradas en la incubadora</p>
             <button 
+              type="button"
               onClick={() => setCreateModalOpen(true)} 
               className="btn btn-primary"
               style={{ marginTop: '1rem' }}
             >
+              <PlusIcon size={18} />
               Registrar mi primera startup
             </button>
           </div>
         ) : (
           <div className={styles.startupGrid}>
-            {startups.map((startup) => (
-              <div key={startup.id} className={styles.startupCard}>
-                <div className={styles.cardTop}>
-                  <div>
-                    <h3 className={styles.startupName}>{startup.name}</h3>
-                    <span className={styles.startupSector}>Sector: {startup.sector}</span>
+            {startups.map((startup) => {
+              const activeDeck = startup.pitchDecks?.find((d: any) => d.isActive) || startup.pitchDecks?.[0];
+
+              return (
+                <div key={startup.id} className={styles.startupCard}>
+                  <div className={styles.cardTop}>
+                    <div>
+                      <h3 className={styles.startupName}>{startup.name}</h3>
+                      <span className={styles.startupSector}>Sector: {startup.sector}</span>
+                    </div>
+                    <span
+                      className={`${styles.badge} ${
+                        startup.isApproved ? styles.badgeSuccess : styles.badgeAmber
+                      }`}
+                    >
+                      {startup.isApproved ? 'Aprobada' : 'En Revisión'}
+                    </span>
                   </div>
-                  <span
-                    className={`${styles.badge} ${
-                      startup.isApproved ? styles.badgeSuccess : styles.badgeAmber
-                    }`}
-                  >
-                    {startup.isApproved ? 'Aprobada' : 'En Revisión'}
-                  </span>
+
+                  <p style={{ fontSize: '0.875rem', color: 'hsl(var(--color-text-secondary))', margin: '0.75rem 0', minHeight: '40px' }}>
+                    {startup.description}
+                  </p>
+
+                  <div className={styles.cardMetrics}>
+                    <span className={styles.metricLabel}>Valoración Objetivo</span>
+                    <span className={styles.metricValue}>
+                      ${Number(startup.valuationTarget).toLocaleString('en-US')} USD
+                    </span>
+                  </div>
+
+                  <div style={{ marginTop: '1.25rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <button 
+                      type="button"
+                      onClick={() => setUploadDeckModalData({ isOpen: true, startupId: startup.id })} 
+                      className="btn btn-outline btn-sm"
+                    >
+                      <FileTextIcon size={16} />
+                      {activeDeck ? 'Actualizar Deck' : 'Subir Pitch Deck'}
+                    </button>
+
+                    {activeDeck && (
+                      <a
+                        href={`/api/pitch-decks/${activeDeck.id}/view`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn btn-outline btn-sm"
+                        title="Ver PDF cifrado"
+                      >
+                        <EyeIcon size={16} />
+                        Ver Deck
+                      </a>
+                    )}
+
+                    <button 
+                      type="button"
+                      onClick={() => setPitchModalOpen(true)}
+                      className="btn btn-primary btn-sm"
+                    >
+                      <CalendarIcon size={16} />
+                      Programar Pitch
+                    </button>
+                  </div>
                 </div>
-                <p style={{ fontSize: '0.875rem', color: 'hsl(var(--color-text-secondary))', margin: '0.75rem 0', minHeight: '40px' }}>
-                  {startup.description}
-                </p>
-                <div className={styles.cardMetrics}>
-                  <span className={styles.metricLabel}>Valoración Objetivo</span>
-                  <span className={styles.metricValue}>
-                    ${Number(startup.valuationTarget).toLocaleString('en-US')} USD
-                  </span>
-                </div>
-                <div style={{ marginTop: '1.25rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  <button 
-                    onClick={() => setUploadDeckModalData({ isOpen: true, startupId: startup.id })} 
-                    className="btn btn-outline btn-sm"
-                  >
-                    📄 {startup.pitchDecks?.length > 0 ? 'Actualizar Deck' : 'Subir Pitch Deck'}
-                  </button>
-                  <button 
-                    onClick={() => setPitchModalOpen(true)}
-                    className="btn btn-primary btn-sm"
-                  >
-                    ⏱️ Programar Pitch
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </section>
 
       <section className={styles.section} id="sesiones">
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Próximas Sesiones de Pitch</h2>
+          <h2 className={styles.sectionTitle}>Próximas Sesiones de Quick Pitch</h2>
         </div>
+
         {pitchSessions.length === 0 ? (
           <div className={styles.emptyState}>
             <CalendarIcon className={styles.emptyIcon} size={48} />
@@ -170,21 +212,27 @@ export function EntrepreneurClient({
           <div className={styles.startupGrid}>
             {pitchSessions.map((session) => (
               <div key={session.id} className={styles.startupCard}>
-                <h3 className={styles.startupName}>{session.startup.name}</h3>
+                <div className={styles.cardTop}>
+                  <h3 className={styles.startupName}>{session.startup.name}</h3>
+                  <span className={styles.badge}>{session.status}</span>
+                </div>
                 <p style={{ fontSize: '0.875rem', color: 'hsl(var(--color-text-muted))', margin: '0.5rem 0' }}>
-                  🕒 {new Date(session.scheduledStart).toLocaleString('es-ES', {
+                  Fecha y Hora: {new Date(session.scheduledStart).toLocaleString('es-ES', {
                     dateStyle: 'medium',
                     timeStyle: 'short'
                   })}
                 </p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-                  <span className={styles.badge}>{session.status}</span>
+                  <span style={{ fontSize: '0.8125rem', color: 'hsl(var(--color-text-secondary))' }}>
+                    Duración: {session.timerDurationSeconds}s
+                  </span>
                   <a 
                     href={`/pitch-room/${session.id}`} 
                     className="btn btn-accent btn-sm"
                     style={{ textDecoration: 'none' }}
                   >
-                    🎥 Entrar a Sala
+                    <VideoIcon size={16} />
+                    Entrar a Sala
                   </a>
                 </div>
               </div>
@@ -212,37 +260,5 @@ export function EntrepreneurClient({
         />
       )}
     </div>
-  );
-}
-
-// Icons
-function RocketIcon({ className, size = 20 }: { className?: string; size?: number }) {
-  return (
-    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
-      <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
-      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
-      <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
-    </svg>
-  );
-}
-
-function MoneyIcon({ className, size = 20 }: { className?: string; size?: number }) {
-  return (
-    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="12" x2="12" y1="2" y2="22" />
-      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-    </svg>
-  );
-}
-
-function CalendarIcon({ className, size = 20 }: { className?: string; size?: number }) {
-  return (
-    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-      <line x1="16" x2="16" y1="2" y2="6" />
-      <line x1="8" x2="8" y1="2" y2="6" />
-      <line x1="3" x2="21" y1="10" y2="10" />
-    </svg>
   );
 }
