@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { createAuditedTransaction } from '@/services/audit-service';
 import { investmentSchema } from '@/lib/validations';
 import { createBinancePayOrder } from '@/lib/binance';
+import { auth } from '@/lib/auth';
 
 /**
  * Endpoint para procesar micro-inversiones directas (Stripe o Binance Pay)
@@ -10,9 +10,16 @@ import { createBinancePayOrder } from '@/lib/binance';
  */
 export async function POST(request: NextRequest) {
   try {
+    // 1. Verificar sesión autenticada
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+    }
+    const userId = session.user.id;
+
     const rawBody = await request.json();
 
-    // 1. Validación estricta con Zod
+    // 2. Validación estricta con Zod
     const validationResult = investmentSchema.safeParse(rawBody);
 
     if (!validationResult.success) {
@@ -21,17 +28,6 @@ export async function POST(request: NextRequest) {
     }
 
     const { startupId, sessionId, amount, gateway, currency } = validationResult.data;
-
-    // 2. Obtener un usuario inversionista para asociar la transacción
-    const investor = await prisma.user.findFirst({
-      where: { role: 'INVESTOR' },
-    });
-
-    const userId = investor?.id || (await prisma.user.findFirst())?.id;
-
-    if (!userId) {
-      return NextResponse.json({ error: 'No se encontró un usuario válido para la transacción' }, { status: 400 });
-    }
 
     let externalTransactionId = `TX-${Date.now().toString(36).toUpperCase()}`;
     let paymentDetails: any = null;

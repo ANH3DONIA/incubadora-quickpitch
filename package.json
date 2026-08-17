@@ -7,7 +7,9 @@
     "server:socket": "npx tsx src/server/socket-server.ts",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "npx tsx --tsconfig tsconfig.json scripts/run-test-suite.ts",
+    "db:seed": "npx tsx --tsconfig tsconfig.json prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
@@ -35,6 +37,7 @@
     "eslint-config-next": "16.3.1",
     "prisma": "^7.9.1",
     "tailwindcss": "^4",
+    "tsx": "^4.19.1",
     "typescript": "^5"
   }
 }

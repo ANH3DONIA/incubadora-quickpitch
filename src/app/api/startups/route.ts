@@ -1,22 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { startupSchema } from '@/lib/validations';
+import { auth } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const parsed = startupSchema.parse(body);
 
-    let { ownerId } = body;
-    if (!ownerId) {
-      const defaultOwner = await prisma.user.findFirst({
-        where: { role: 'ENTREPRENEUR' }
-      });
-      if (!defaultOwner) {
-        return NextResponse.json({ error: 'No entrepreneur found' }, { status: 400 });
-      }
-      ownerId = defaultOwner.id;
+    const sessionData = await auth();
+    if (!sessionData?.user?.id) {
+      return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
     }
+    const ownerId = sessionData.user.id;
 
     const startup = await prisma.startup.create({
       data: {

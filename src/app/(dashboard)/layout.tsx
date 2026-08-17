@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import styles from './dashboard.module.css';
 
 export default function DashboardLayout({
@@ -14,15 +14,36 @@ export default function DashboardLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
 
+  const { data: sessionData } = useSession();
+  const userName = sessionData?.user?.name || 'Usuario';
+  const userInitials = userName.split(' ').map((n: string) => n[0] ?? '').join('').toUpperCase().slice(0, 2) || 'U';
+  const userRole = (sessionData?.user as { role?: string })?.role || '';
+  const roleLabel = userRole === 'ENTREPRENEUR' ? 'Emprendedor' : userRole === 'INVESTOR' ? 'Inversionista' : userRole === 'ADMIN' ? 'Administrador' : 'Mi Perfil';
+
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
-  const navItems = [
-    { name: 'Dashboard', href: '/entrepreneur', icon: <HomeIcon /> },
-    { name: 'Startups', href: '#startups', icon: <RocketIcon /> },
-    { name: 'Sesiones', href: '#sesiones', icon: <VideoIcon /> },
-    { name: 'Inversiones', href: '#inversiones', icon: <ChartIcon /> },
-    { name: 'Auditoría', href: '/admin', icon: <ShieldIcon /> },
-  ];
+  const navItems =
+    userRole === 'ENTREPRENEUR'
+      ? [
+          { name: 'Dashboard', href: '/entrepreneur', icon: <HomeIcon /> },
+          { name: 'Startups', href: '#startups', icon: <RocketIcon /> },
+          { name: 'Sesiones', href: '#sesiones', icon: <VideoIcon /> },
+        ]
+      : userRole === 'INVESTOR'
+      ? [
+          { name: 'Dashboard', href: '/investor', icon: <HomeIcon /> },
+          { name: 'Inversiones', href: '#inversiones', icon: <ChartIcon /> },
+          { name: 'Sesiones', href: '#sesiones', icon: <VideoIcon /> },
+        ]
+      : userRole === 'ADMIN'
+      ? [
+          { name: 'Dashboard', href: '/admin', icon: <HomeIcon /> },
+          { name: 'Startups', href: '#startups', icon: <RocketIcon /> },
+          { name: 'Auditoría', href: '/admin', icon: <ShieldIcon /> },
+        ]
+      : [
+          { name: 'Dashboard', href: '/entrepreneur', icon: <HomeIcon /> },
+        ];
 
   return (
     <div className={styles.layout}>
@@ -61,10 +82,10 @@ export default function DashboardLayout({
 
         <div className={styles.sidebarFooter}>
           <Link href="#profile" className={styles.userProfile}>
-            <div className={styles.avatar}>JD</div>
+            <div className={styles.avatar}>{userInitials}</div>
             <div className={styles.userInfo}>
-              <span className={styles.userName}>John Doe</span>
-              <span className={styles.userRole}>Mi Perfil</span>
+              <span className={styles.userName}>{userName}</span>
+              <span className={styles.userRole}>{roleLabel}</span>
             </div>
           </Link>
           <button className={styles.logoutBtn} onClick={() => signOut({ callbackUrl: '/login' })}>
@@ -89,7 +110,7 @@ export default function DashboardLayout({
               <BellIcon />
               <span className={styles.badgeIndicator}></span>
             </button>
-            <div className={styles.avatar}>JD</div>
+            <div className={styles.avatar}>{userInitials}</div>
           </div>
         </header>
 

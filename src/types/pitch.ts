@@ -44,6 +44,6 @@ export interface InvestmentParams {
   sessionId: string
   startupId: string
   amount: number
-  currency: 'USD' | 'USDT' | 'BTC'
+  currency: 'USD' | 'USDT' | 'BTC' | 'EUR'
   gateway: 'STRIPE' | 'BINANCE_PAY'
 }

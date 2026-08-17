@@ -43,14 +43,14 @@ function LoginForm() {
           const role = sessionData?.user?.role;
 
           if (role === 'INVESTOR') {
-            window.location.href = '/investor';
+            router.push('/investor');
           } else if (role === 'ADMIN') {
-            window.location.href = '/admin';
+            router.push('/admin');
           } else {
-            window.location.href = '/entrepreneur';
+            router.push('/entrepreneur');
           }
         } catch {
-          window.location.href = '/entrepreneur';
+          router.push('/entrepreneur');
         }
       }
     } catch (err) {

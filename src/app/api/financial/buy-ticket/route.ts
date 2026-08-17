@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import crypto from 'crypto';
+import { auth } from '@/lib/auth';
+import { createAuditedTransaction } from '@/services/audit-service';
 
 export async function POST(req: Request) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+    }
+    const userId = session.user.id;
+
     const body = await req.json();
     const { passType, amount, gateway } = body;
 
@@ -11,27 +18,23 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Tipo de pase inválido' }, { status: 400 });
     }
 
-    const user = await prisma.user.findFirst({ where: { role: 'INVESTOR' } });
-    if (!user) {
-      return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
+    if (!amount || amount <= 0) {
+      return NextResponse.json({ error: 'Monto inválido' }, { status: 400 });
     }
 
-    const auditHash = crypto.createHmac('sha256', process.env.AUDIT_SECRET || 'secret').update(`${user.id}:${amount}:${Date.now()}`).digest('hex');
-
-    const transaction = await prisma.financialTransaction.create({
-      data: {
-        userId: user.id,
-        gateway: gateway as any,
-        amount,
-        transactionType: 'TICKET',
-        status: 'COMPLETED',
-        auditHash,
-      },
+    const transaction = await createAuditedTransaction({
+      userId,
+      gateway: gateway as 'STRIPE' | 'BINANCE_PAY',
+      amount,
+      currency: 'USD',
+      transactionType: 'TICKET',
+      status: 'COMPLETED',
+      metadata: { passType },
     });
 
     const ticket = await prisma.ticket.create({
       data: {
-        userId: user.id,
+        userId,
         transactionId: transaction.id,
         eventName: passType,
       },
@@ -43,6 +46,7 @@ export async function POST(req: Request) {
       transaction,
     });
   } catch (error) {
-    return NextResponse.json({ error: 'Error al procesar la compra' }, { status: 400 });
+    console.error('Error al procesar compra de pase:', error);
+    return NextResponse.json({ error: 'Error al procesar la compra' }, { status: 500 });
   }
 }

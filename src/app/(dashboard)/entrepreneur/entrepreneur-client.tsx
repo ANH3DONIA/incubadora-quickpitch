@@ -4,6 +4,7 @@ import { useState } from 'react';
 import styles from './entrepreneur.module.css';
 import { CreateStartupModal } from '@/components/startup/create-startup-modal';
 import { UploadDeckModal } from '@/components/startup/upload-deck-modal';
+import { SchedulePitchModal } from '@/components/pitch/schedule-pitch-modal';
 
 interface EntrepreneurClientProps {
   formattedDate: string;
@@ -24,6 +25,7 @@ export function EntrepreneurClient({
 }: EntrepreneurClientProps) {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [uploadDeckModalData, setUploadDeckModalData] = useState<{ isOpen: boolean, startupId: string }>({ isOpen: false, startupId: '' });
+  const [isPitchModalOpen, setPitchModalOpen] = useState(false);
 
   return (
     <div className={styles.container}>
@@ -34,7 +36,7 @@ export function EntrepreneurClient({
           <button onClick={() => setCreateModalOpen(true)} style={{ padding: '0.5rem 1rem', background: 'black', color: 'white', borderRadius: '4px' }}>
             Crear Startup
           </button>
-          <button style={{ padding: '0.5rem 1rem', background: '#333', color: 'white', borderRadius: '4px' }}>
+          <button style={{ padding: '0.5rem 1rem', background: '#333', color: 'white', borderRadius: '4px' }} onClick={() => setPitchModalOpen(true)}>
             Agendar Pitch
           </button>
         </div>
@@ -161,6 +163,14 @@ export function EntrepreneurClient({
         <UploadDeckModal 
           startupId={uploadDeckModalData.startupId} 
           onClose={() => setUploadDeckModalData({ isOpen: false, startupId: '' })} 
+        />
+      )}
+
+      {isPitchModalOpen && (
+        <SchedulePitchModal
+          isOpen={isPitchModalOpen}
+          onClose={() => setPitchModalOpen(false)}
+          startups={startups.map((s: { id: string; name: string }) => ({ id: s.id, name: s.name }))}
         />
       )}
     </div>
